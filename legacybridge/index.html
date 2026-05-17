@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legacy Bridge — Modernization Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="src/styles/main.css"/>
+</head>
+<body>
+  <div id="app">
+    <nav class="nav">
+      <div class="nav-inner">
+        <div class="nav-logo">
+          <span class="logo-box">LB</span>
+          <span class="logo-text">Legacy<strong>Bridge</strong></span>
+        </div>
+        <div class="nav-links">
+          <span class="nav-tag">v1.0 · Hackathon Demo</span>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-badge">Natural & Adabas Modernization</div>
+        <h1 class="hero-title">Analyze.<br/>Understand.<br/>Modernize.</h1>
+        <p class="hero-sub">Paste legacy Natural/Adabas code. Get instant AI-powered insights on complexity, coupling, migration effort — and a full modernization roadmap.</p>
+      </div>
+      <div class="hero-deco" aria-hidden="true">
+        <div class="deco-grid"></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="layout">
+
+        <!-- LEFT: Input -->
+        <section class="pane pane-input">
+          <div class="pane-header">
+            <span class="pane-title">Code Input</span>
+            <div class="file-upload-wrap">
+              <label class="btn-upload" for="file-input">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload .nat file
+              </label>
+              <input type="file" id="file-input" accept=".nat,.nsp,.NSP,.txt" style="display:none"/>
+            </div>
+          </div>
+
+          <div class="samples-row">
+            <span class="samples-label">Samples:</span>
+            <button class="chip" data-sample="crud">CRUD routine</button>
+            <button class="chip" data-sample="batch">Batch job</button>
+            <button class="chip" data-sample="report">Report program</button>
+          </div>
+
+          <div class="editor-wrap">
+            <div class="editor-gutter" id="gutter"></div>
+            <textarea id="code-input" spellcheck="false" placeholder="DEFINE DATA LOCAL&#10;01 CUSTOMER VIEW OF CUSTOMERS&#10;   02 CUST-ID    (N8)&#10;   02 CUST-NAME  (A30)&#10;END-DEFINE&#10;..."></textarea>
+          </div>
+
+          <div class="input-footer">
+            <span class="line-count" id="line-count">0 lines</span>
+            <div class="btn-row">
+              <button class="btn-ghost" id="clear-btn">Clear</button>
+              <button class="btn-primary" id="analyze-btn">
+                <span class="btn-label">Analyze →</span>
+                <span class="btn-loading" style="display:none">Analyzing…</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT: Results -->
+        <section class="pane pane-results" id="results-pane">
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <p>Paste or upload Natural code<br/>and hit <strong>Analyze →</strong></p>
+          </div>
+
+          <div class="results-inner" id="results-inner" style="display:none">
+
+            <!-- Metrics -->
+            <div class="section-label">Overview</div>
+            <div class="metrics-grid" id="metrics-grid"></div>
+
+            <!-- Tab nav -->
+            <div class="tab-nav">
+              <button class="tab active" data-tab="breakdown">Structure</button>
+              <button class="tab" data-tab="issues">Issues</button>
+              <button class="tab" data-tab="recs">Recommendations</button>
+              <button class="tab" data-tab="graph">Dep. Graph</button>
+              <button class="tab" data-tab="compare">Before / After</button>
+            </div>
+
+            <div class="tab-content" id="tab-breakdown">
+              <div id="bars-container"></div>
+            </div>
+            <div class="tab-content hidden" id="tab-issues">
+              <div id="issues-container"></div>
+            </div>
+            <div class="tab-content hidden" id="tab-recs">
+              <div id="recs-container"></div>
+              <div class="phase-strip" id="phase-strip"></div>
+            </div>
+            <div class="tab-content hidden" id="tab-graph">
+              <canvas id="dep-graph" width="520" height="320"></canvas>
+            </div>
+            <div class="tab-content hidden" id="tab-compare">
+              <div class="compare-wrap">
+                <div class="compare-col">
+                  <div class="compare-label legacy">Legacy Natural</div>
+                  <pre id="compare-before" class="compare-code"></pre>
+                </div>
+                <div class="compare-col">
+                  <div class="compare-label modern">Modern Java</div>
+                  <pre id="compare-after" class="compare-code"></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="export-row">
+              <button class="btn-export" id="export-btn">Export report (.txt)</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="src/utils/analyzer.js"></script>
+  <script src="src/utils/graph.js"></script>
+  <script src="src/utils/compare.js"></script>
+  <script src="src/components/app.js"></script>
+</body>
+</html>
